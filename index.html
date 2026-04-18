@@ -1,32 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Score Keeper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>Score Keeper</h1>
-  </header>
-
   <main>
-    <section>
-      <h2>Team A</h2>
-      <p>Score: <span id="team-a-score">0</span></p>
-      <button type="button" onclick="incrementTeamA()">+</button>
-      <button type="button" onclick="decrementTeamA()">-</button>
-    </section>
+    <h1>Score Keeper</h1>
 
-    <section>
-      <h2>Team B</h2>
-      <p>Score: <span id="team-b-score">0</span></p>
-      <button type="button" onclick="incrementTeamB()">+</button>
-      <button type="button" onclick="decrementTeamB()">-</button>
-    </section>
+    <div class="device">
+      <button type="button" class="reset">Reset</button>
+
+      <div class="device-panels">
+        <section class="panel" aria-labelledby="team-a-label">
+          <p class="label" id="team-a-label">Team A</p>
+          <span class="display" id="team-a-display">0</span>
+          <div class="controls">
+            <button type="button" class="decrement" aria-label="Decrease Team A score">−</button>
+            <button type="button" class="increment" aria-label="Increase Team A score">+</button>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="team-b-label">
+          <p class="label" id="team-b-label">Team B</p>
+          <span class="display" id="team-b-display">0</span>
+          <div class="controls">
+            <button type="button" class="decrement" aria-label="Decrease Team B score">−</button>
+            <button type="button" class="increment" aria-label="Increase Team B score">+</button>
+          </div>
+        </section>
+      </div>
+    </div>
   </main>
-
-  <script src="script.js"></script>
 </body>
 </html>

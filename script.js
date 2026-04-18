@@ -1,49 +1,56 @@
 let teamAScore = 0;
 let teamBScore = 0;
 
-function saveScores() {
-  localStorage.setItem("teamAScore", String(teamAScore));
-  localStorage.setItem("teamBScore", String(teamBScore));
-}
-
-function loadScores() {
-  const savedTeamAScore = parseInt(localStorage.getItem("teamAScore"), 10);
-  const savedTeamBScore = parseInt(localStorage.getItem("teamBScore"), 10);
-
-  if (!Number.isNaN(savedTeamAScore)) {
-    teamAScore = savedTeamAScore;
-  }
-
-  if (!Number.isNaN(savedTeamBScore)) {
-    teamBScore = savedTeamBScore;
-  }
-}
+let teamADisplay;
+let teamBDisplay;
 
 function updateScores() {
-  document.getElementById("team-a-score").textContent = teamAScore;
-  document.getElementById("team-b-score").textContent = teamBScore;
-  saveScores();
+  teamADisplay.textContent = String(teamAScore);
+  teamBDisplay.textContent = String(teamBScore);
 }
 
-function incrementTeamA() {
-  teamAScore += 1;
-  updateScores();
+function initScorekeeper() {
+  const device = document.querySelector(".device");
+  teamADisplay = document.querySelector("#team-a-display");
+  teamBDisplay = document.querySelector("#team-b-display");
+
+  const teamAPanel = teamADisplay && teamADisplay.closest(".panel");
+  const teamBPanel = teamBDisplay && teamBDisplay.closest(".panel");
+  const resetButton = device && device.querySelector(".reset");
+
+  if (!device || !teamADisplay || !teamBDisplay || !teamAPanel || !teamBPanel || !resetButton) {
+    return;
+  }
+
+  teamAPanel.querySelector(".increment").addEventListener("click", function () {
+    teamAScore += 1;
+    updateScores();
+  });
+
+  teamAPanel.querySelector(".decrement").addEventListener("click", function () {
+    teamAScore -= 1;
+    updateScores();
+  });
+
+  teamBPanel.querySelector(".increment").addEventListener("click", function () {
+    teamBScore += 1;
+    updateScores();
+  });
+
+  teamBPanel.querySelector(".decrement").addEventListener("click", function () {
+    teamBScore -= 1;
+    updateScores();
+  });
+
+  resetButton.addEventListener("click", function () {
+    teamAScore = 0;
+    teamBScore = 0;
+    updateScores();
+  });
 }
 
-function decrementTeamA() {
-  teamAScore -= 1;
-  updateScores();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initScorekeeper);
+} else {
+  initScorekeeper();
 }
-
-function incrementTeamB() {
-  teamBScore += 1;
-  updateScores();
-}
-
-function decrementTeamB() {
-  teamBScore -= 1;
-  updateScores();
-}
-
-loadScores();
-updateScores();

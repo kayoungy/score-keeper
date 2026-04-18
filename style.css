@@ -1,77 +1,338 @@
-* {
+/* -------------------------------------------------------------------------- */
+/* Variables                                                                 */
+/* -------------------------------------------------------------------------- */
+
+:root {
+  --color-bg: #f0e9dd;
+  --color-bg-deep: #e8dfd0;
+  --color-casing: #f5c518;
+  --color-casing-dark: #d9a911;
+  --color-casing-light: #fcdb5e;
+  --casing-face-lit: color-mix(in srgb, var(--color-casing) 87%, #ffffff);
+  --casing-face-shade: color-mix(in srgb, var(--color-casing) 85%, #1a1208);
+  --color-display-bg: #1a1a1a;
+  --color-display-text: #f5f0e6;
+  --color-text: #2a1f14;
+  --color-button: #f8dc63;
+  --color-button-symbol: rgba(42, 31, 20, 0.88);
+  --device-max-width: 640px;
+  --device-padding-block: 1.75rem;
+  --device-padding-inline: 2.25rem;
+  --device-stack-gap: 1.125rem;
+  --panel-stack-gap: 0.75rem;
+  --panel-columns-gap: 2rem;
+  --controls-button-gap: 1.125rem;
+  --reset-tab-height: 1.65rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Reset / base                                                               */
+/* -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Page / body                                                                */
+/* -------------------------------------------------------------------------- */
 
 body {
   margin: 0;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-  background: #f4f6fb;
-  color: #1f2937;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  background: linear-gradient(
+    165deg,
+    #f7f1e8 0%,
+    var(--color-bg) 38%,
+    var(--color-bg) 62%,
+    var(--color-bg-deep) 100%
+  );
+  color: var(--color-text);
 }
 
-header h1 {
-  margin: 0 0 1.5rem;
-  font-size: 2rem;
-}
+/* -------------------------------------------------------------------------- */
+/* Main layout                                                                */
+/* -------------------------------------------------------------------------- */
 
 main {
-  width: min(700px, 92vw);
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1.5rem;
+  padding-top: min(38vh, 18rem);
+  padding-bottom: 2rem;
+  gap: calc(3.25rem * 3);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Title                                                                      */
+/* -------------------------------------------------------------------------- */
+
+main h1 {
+  margin: 0;
+  width: 100%;
+  max-width: var(--device-max-width);
+  text-align: center;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: clamp(1.35rem, 3.4vw, 1.75rem);
+  font-weight: 500;
+  color: var(--color-text);
+  letter-spacing: 0.03em;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Device shell                                                               */
+/* -------------------------------------------------------------------------- */
+
+.device {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  max-width: var(--device-max-width);
+  margin-top: 0.85rem;
+  padding: var(--device-padding-block) var(--device-padding-inline);
+  background-color: var(--color-casing);
+  border-radius: clamp(36px, 8vmin, 56px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.18),
+    inset 0 3px 8px rgba(255, 255, 255, 0.2),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.device::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Molded plastic: subtle vertical light + top sheen (above noise, below content) */
+.device::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0) 28%
+    ),
+    linear-gradient(
+      180deg,
+      var(--casing-face-lit) 0%,
+      transparent 38%,
+      transparent 62%,
+      var(--casing-face-shade) 100%
+    );
+  opacity: 0.42;
+  mix-blend-mode: soft-light;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Panel row (two columns inside the yellow casing)                           */
+/* -------------------------------------------------------------------------- */
+
+.device-panels {
+  position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--device-stack-gap) var(--panel-columns-gap);
+  align-items: start;
+  min-width: 0;
 }
 
-section {
-  background: #ffffff;
-  border: 1px solid #dbe2ee;
-  border-radius: 12px;
-  padding: 1.25rem;
+/* -------------------------------------------------------------------------- */
+/* Panels (layout + flip display on .display)                                 */
+/* -------------------------------------------------------------------------- */
+
+.panel {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-}
-
-section h2 {
-  margin: 0 0 0.75rem;
-}
-
-section p {
-  margin: 0 0 1rem;
-  font-size: 1.1rem;
-}
-
-section span {
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-button {
+  gap: var(--panel-stack-gap);
+  min-width: 0;
+  background: transparent;
   border: none;
+  box-shadow: none;
+}
+
+.panel .label {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Flip display panels (Step 4)                                               */
+/* -------------------------------------------------------------------------- */
+
+.panel .display {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 12rem;
+  height: 7rem;
+  min-height: 7rem;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  background-color: var(--color-display-bg);
   border-radius: 8px;
-  padding: 0.55rem 0.9rem;
-  margin: 0 0.3rem;
-  font-size: 1rem;
+  box-shadow:
+    inset 0 4px 8px rgba(0, 0, 0, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.32),
+    0 6px 18px rgba(0, 0, 0, 0.28),
+    0 0 0 2px rgba(0, 0, 0, 0.12);
+  overflow: visible;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-weight: 700;
+  font-size: clamp(2.5rem, 11vmin, 5rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--color-display-text);
+  text-align: center;
+}
+
+.panel .display::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.6);
+  transform: translateY(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Score +/- buttons (Step 5)                                                */
+/* -------------------------------------------------------------------------- */
+
+.controls {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  width: 100%;
+  max-width: 12rem;
+  gap: var(--controls-button-gap);
+}
+
+.device .controls .increment,
+.device .controls .decrement {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  width: 2.875rem;
+  height: 2.875rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
   cursor: pointer;
-  background: #2563eb;
-  color: #ffffff;
-  transition: transform 0.08s ease, background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-button-symbol);
+  background: var(--color-button);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 2px 0 rgba(255, 255, 255, 0.32),
+    0 4px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 80ms ease, box-shadow 80ms ease;
 }
 
-button:hover {
-  background: #1d4ed8;
+.device .controls .increment:hover,
+.device .controls .decrement:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 2px 0 rgba(255, 255, 255, 0.38),
+    0 5px 9px rgba(0, 0, 0, 0.22);
 }
 
-button:active {
-  transform: translateY(1px);
+.device .controls .increment:active,
+.device .controls .decrement:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 2px 4px rgba(0, 0, 0, 0.16);
 }
 
-@media (max-width: 640px) {
-  main {
-    grid-template-columns: 1fr;
-  }
+.device .controls .increment:focus-visible,
+.device .controls .decrement:focus-visible {
+  outline: 2px solid var(--color-casing-dark);
+  outline-offset: 3px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Reset — snooze tab (Step 7)                                                */
+/* -------------------------------------------------------------------------- */
+
+.device > .reset {
+  position: absolute;
+  left: 50%;
+  top: calc(-1 * var(--reset-tab-height));
+  bottom: auto;
+  z-index: 5;
+  width: 7.75rem;
+  height: var(--reset-tab-height);
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  transform: translateX(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-display-text);
+  background-color: var(--color-display-bg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 -2px 6px rgba(0, 0, 0, 0.28);
+}
+
+.device > .reset:focus-visible {
+  outline: 2px solid var(--color-casing-light);
+  outline-offset: 3px;
 }
