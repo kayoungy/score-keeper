@@ -63,27 +63,8 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 1.5rem;
-  padding-top: min(38vh, 18rem);
-  padding-bottom: 2rem;
-  gap: calc(3.25rem * 3);
-}
-
-/* -------------------------------------------------------------------------- */
-/* Title                                                                      */
-/* -------------------------------------------------------------------------- */
-
-main h1 {
-  margin: 0;
-  width: 100%;
-  max-width: var(--device-max-width);
-  text-align: center;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
-  font-size: clamp(1.35rem, 3.4vw, 1.75rem);
-  font-weight: 500;
-  color: var(--color-text);
-  letter-spacing: 0.03em;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -95,7 +76,7 @@ main h1 {
   overflow: visible;
   width: 100%;
   max-width: var(--device-max-width);
-  margin-top: 0.85rem;
+  margin-top: 0;
   padding: var(--device-padding-block) var(--device-padding-inline);
   background-color: var(--color-casing);
   border-radius: clamp(36px, 8vmin, 56px);
