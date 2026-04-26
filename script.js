@@ -4,12 +4,29 @@ let teamBScore = 0;
 let teamADisplay;
 let teamBDisplay;
 
+function saveScores() {
+  localStorage.setItem("teamAScore", teamAScore);
+  localStorage.setItem("teamBScore", teamBScore);
+}
+
+function loadScores() {
+  teamAScore = parseInt(localStorage.getItem("teamAScore")) || 0;
+  teamBScore = parseInt(localStorage.getItem("teamBScore")) || 0;
+}
+
 function updateScores() {
   teamADisplay.textContent = String(teamAScore);
   teamBDisplay.textContent = String(teamBScore);
 }
 
+function updateAndSave() {
+  updateScores();
+  saveScores();
+}
+
 function initScorekeeper() {
+  loadScores();
+
   const device = document.querySelector(".device");
   teamADisplay = document.querySelector("#team-a-display");
   teamBDisplay = document.querySelector("#team-b-display");
@@ -22,30 +39,32 @@ function initScorekeeper() {
     return;
   }
 
+  updateScores();
+
   teamAPanel.querySelector(".increment").addEventListener("click", function () {
     teamAScore += 1;
-    updateScores();
+    updateAndSave();
   });
 
   teamAPanel.querySelector(".decrement").addEventListener("click", function () {
     teamAScore -= 1;
-    updateScores();
+    updateAndSave();
   });
 
   teamBPanel.querySelector(".increment").addEventListener("click", function () {
     teamBScore += 1;
-    updateScores();
+    updateAndSave();
   });
 
   teamBPanel.querySelector(".decrement").addEventListener("click", function () {
     teamBScore -= 1;
-    updateScores();
+    updateAndSave();
   });
 
   resetButton.addEventListener("click", function () {
     teamAScore = 0;
     teamBScore = 0;
-    updateScores();
+    updateAndSave();
   });
 }
 
